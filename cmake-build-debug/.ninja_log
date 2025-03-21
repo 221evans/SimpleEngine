@@ -1,0 +1,10 @@
+# ninja log v6
+7	601	1742554836093524923	CMakeFiles/SimpleEngine.dir/main.cpp.o	bc0a0c8fa8000884
+11	3357	1742545638441587022	CMakeFiles/SimpleEngine.dir/Player.cpp.o	eaa51fcac03e7350
+541	580	1742555061342823633	SimpleEngine	5a0bab07ac6cafba
+5	538	1742555060807264778	CMakeFiles/SimpleEngine.dir/src/Player.cpp.o	b7eef4620923eebf
+6	191	1742554600395397363	CMakeFiles/SimpleEngine.dir/src/TextureHandler.cpp.o	eec41b9874b4b29e
+16	221	1742556001481831178	CMakeFiles/SimpleEngine.dir/src/Enemy.cpp.o	c81578380433d490
+16	575	1742556001481662113	CMakeFiles/SimpleEngine.dir/src/Player.cpp.o	b7eef4620923eebf
+14	629	1742556001480608426	CMakeFiles/SimpleEngine.dir/main.cpp.o	bc0a0c8fa8000884
+629	802	1742556002095250171	SimpleEngine	e1614c92ac651aaf

@@ -1,0 +1,3 @@
+/Users/jasonevans/Documents/SimpleEngine/cmake-build-debug/CMakeFiles/SimpleEngine.dir
+/Users/jasonevans/Documents/SimpleEngine/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/jasonevans/Documents/SimpleEngine/cmake-build-debug/CMakeFiles/rebuild_cache.dir
