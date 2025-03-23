@@ -170,6 +170,7 @@ void Player::Update(float deltaTime)
                 attackAnimationComplete = true;
                 attackTriggered = false;
                 isAttacking = false;
+                actionCompletedThisTurn = true;
             }
         }
     }

@@ -16,6 +16,17 @@ public:
     Vector2 position;
     TextureHandler textureHandler;
     bool isAttacking;
+    bool attackTriggered;
+    bool actionCompletedThisTurn;
+    Rectangle collisionRec;
+    void Init();
+    void EnemyAttack();
+    bool IsAttackComplete();
+    void StartTurn();
+    void Draw();
+    void Update(float deltaTime);
+    void ResetAttackState();
+
 private:
     Texture2D currentEnemyTexture;
     bool isFacingLeft;
@@ -33,7 +44,13 @@ private:
     int frameCount;
     bool isRunning;
     float rotation;
+    int currentFrame;
+    float attackTimer;
+    float attackDuration;
+
 };
+
+
 
 
 

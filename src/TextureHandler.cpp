@@ -15,10 +15,10 @@ void TextureHandler::LoadPlayerTextures()
 
 void TextureHandler::LoadBlackBoarTextures()
 {
-    blackBoarIdle = LoadTexture("../Assets/Enemy/blackBoarIdle.png");
-    blackBoarRun = LoadTexture("../Assets/Enemy/blackBoarRun.png");
-    blackBoarAttack = LoadTexture("../Assets/Enemy/blackBoarAttack.png");
-    blackBoarDead = LoadTexture("../Assets/Enemy/blackBoarDead.png");
+    blackBoarIdle = LoadTexture("Assets/Enemy/blackBoarIdle.png");
+    blackBoarRun = LoadTexture("Assets/Enemy/blackBoarRun.png");
+    blackBoarAttack = LoadTexture("Assets/Enemy/blackBoarAttack.png");
+    blackBoarDead = LoadTexture("Assets/Enemy/blackBoarDead.png");
 }
 
 void TextureHandler::UnloadTextures() const

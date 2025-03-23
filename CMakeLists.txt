@@ -40,5 +40,7 @@ add_executable(SimpleEngine main.cpp
         src/TextureHandler.cpp
         src/TextureHandler.hpp
         src/Enemy.cpp
-        src/Enemy.hpp)
+        src/Enemy.hpp
+        src/Game.cpp
+        src/Game.hpp)
 target_link_libraries(SimpleEngine PRIVATE raylib)
