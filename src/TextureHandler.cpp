@@ -3,9 +3,16 @@
 //
 
 #include "TextureHandler.hpp"
+#include <iostream>
+#include <filesystem>
 
 void TextureHandler::LoadPlayerTextures()
 {
+    std::cout << "Loading textures from: " << std::filesystem::current_path().string() << std::endl;
+    // Check if files exist before loading
+    if (!std::filesystem::exists("Assets/Player/playerIdle.png")) {
+        std::cout << "ERROR: Could not find playerIdle.png" << std::endl;
+    }
     playerIdle = LoadTexture("Assets/Player/playerIdle.png");
     playerRun = LoadTexture("Assets/Player/playerRun.png");
     playerJump = LoadTexture("Assets/Player/playerJump.png");

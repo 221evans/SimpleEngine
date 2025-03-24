@@ -1,109 +1,109 @@
-//
-// Created by Jason Evans on 21/03/2025.
-//
-
+// src/Game.cpp
 #include "Game.hpp"
+#include "PlayerEntity.hpp"
+#include "EnemyEntity.hpp"
+#include "raylib.h"
 #include <iostream>
 
-Game::Game()
-{
-    isPlayerTurn = true;
-    isEnemyTurn = false;
-    enemyTurnInitialized = false;
-    playerTurnInitialized = false;
+Game::Game() :
+    isPlayerTurn(true),
+    isEnemyTurn(false),
+    playerTurnInitialized(false),
+    enemyTurnInitialized(false) {
 }
 
-Game::~Game()
-{
+Game::~Game() {
+    entities.clear();
 }
 
-void Game::Init()
-{
-    InitWindow(800, 600, "Turn based RPG");
-    player.Init();
-    enemy.Init();
-    std::cout << "Game Initialized. Players Turn First." << std::endl;
+void Game::Init() {
+    InitWindow(800, 600, "Turn Based RPG - Entity System");
+
+    // Create player entity
+    player = std::make_shared<PlayerEntity>();
+    AddEntity(player);
+
+    // Create enemy entity
+    enemy = std::make_shared<EnemyEntity>();
+    AddEntity(enemy);
+
+    // Initialize all entities
+    for (auto& entity : entities) {
+        entity->Init();
+    }
+
+    std::cout << "Game Initialized. Player's Turn First." << std::endl;
 }
 
-void Game::Update(float deltaTime)
-{
-    deltaTime = GetFrameTime();
-    player.Update(deltaTime);
-    enemy.Update(deltaTime);
+void Game::Update(float deltaTime) {
+    // Update all entities
+    for (auto& entity : entities) {
+        entity->Update(deltaTime);
+    }
+
+    // Draw UI
     DrawUI();
-    if (isPlayerTurn)
-    {
+
+    // Handle turn-based mechanics
+    if (isPlayerTurn) {
         HandlePlayerTurn();
     }
-    else if (isEnemyTurn)
-    {
+    else if (isEnemyTurn) {
         HandleEnemyTurn();
     }
 }
 
-void Game::HandlePlayerTurn()
-{
-    if (!playerTurnInitialized)
-    {
-        player.StartTurn();
+void Game::HandlePlayerTurn() {
+    if (!playerTurnInitialized) {
+        player->StartTurn();
         playerTurnInitialized = true;
     }
 
-    if (IsKeyPressed(KEY_ONE))
-    {
-        player.TriggerAttack();
+    // Check for player actions
+    if (IsKeyPressed(KEY_ONE)) {
+        player->TriggerAttack();
     }
 
-    if (player.isAttackComplete())
-    {
-        std::cout << "Player Action complete. Switching to enemy turn" << std::endl;
+    // Check if player has completed their action
+    if (player->IsAttackComplete()) {
+        std::cout << "Player action complete. Switching to enemy turn." << std::endl;
         SwitchToEnemyTurn();
     }
 }
 
-void Game::HandleEnemyTurn()
-{
-    if (!enemyTurnInitialized)
-    {
-        enemy.StartTurn();
+void Game::HandleEnemyTurn() {
+    if (!enemyTurnInitialized) {
+        enemy->StartTurn();
         enemyTurnInitialized = true;
     }
 
-    std::cout << "Enemy state: isAttacking=" << enemy.isAttacking
-              << ", attackTriggered=" << enemy.attackTriggered
-              << ", actionCompletedThisTurn=" << enemy.actionCompletedThisTurn << std::endl;
-
-
-    if (!enemy.isAttacking && !enemy.attackTriggered && !enemy.actionCompletedThisTurn)
-    {
-        enemy.EnemyAttack();
+    // Enemy AI logic - simple for now, just attack
+    if (!enemy->IsAttackComplete()) {
+        enemy->EnemyAttack();
     }
 
-    if (enemy.IsAttackComplete())
-    {
+    // Check if enemy has completed their action
+    if (enemy->IsAttackComplete()) {
         std::cout << "Enemy action complete. Switching to player turn." << std::endl;
         SwitchToPlayerTurn();
     }
 }
 
-void Game::SwitchToPlayerTurn()
-{
+void Game::SwitchToPlayerTurn() {
     isPlayerTurn = true;
     isEnemyTurn = false;
     playerTurnInitialized = false;
-    enemy.ResetAttackState();
+    enemy->ResetAttackState();
 }
 
-void Game::SwitchToEnemyTurn()
-{
+void Game::SwitchToEnemyTurn() {
     isPlayerTurn = false;
     isEnemyTurn = true;
     enemyTurnInitialized = false;
-    player.ResetAttackState();
+    player->ResetAttackState();
 }
 
-void Game::DrawUI()
-{
+void Game::DrawUI() {
     DrawRectangle(50, 350, 700, 100, BLACK);
 
     // Add a turn indicator
@@ -117,7 +117,9 @@ void Game::DrawUI()
     DrawText("4: RUN", 550, 480, 20, WHITE);
 }
 
-
+void Game::AddEntity(std::shared_ptr<Entity> entity) {
+    entities.push_back(entity);
+}
 
 
 
