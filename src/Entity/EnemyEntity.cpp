@@ -35,7 +35,7 @@ void EnemyEntity::Init() {
     // Set up animations
     spriteComponent->SetTexture("idle", textureHandler.blackBoarIdle, 4, 96, 64);
     spriteComponent->SetTexture("run", textureHandler.blackBoarRun, 6, 96, 64);
-    spriteComponent->SetTexture("attack", textureHandler.blackBoarAttack, 8, 96, 64);
+    spriteComponent->SetTexture("attack", textureHandler.blackBoarAttack, 8, 160, 112);
     spriteComponent->SetTexture("dead", textureHandler.blackBoarDead, 4, 96, 64);
 
     // Initial animation

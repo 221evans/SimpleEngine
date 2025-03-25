@@ -54,8 +54,8 @@ void SpriteComponent::Update(Entity* owner, float deltaTime) {
     // Set up the destination rectangle
     destRec.x = owner->GetPosition().x;
     destRec.y = owner->GetPosition().y;
-    destRec.width = width;
-    destRec.height = height;
+    destRec.width = anim.frameWidth;
+    destRec.height = anim.frameHeight;
 }
 
 void SpriteComponent::Draw(Entity* owner) {
@@ -64,13 +64,44 @@ void SpriteComponent::Draw(Entity* owner) {
     }
 
     const auto& anim = animations[currentAnimation];
+    Vector2 drawOrigin = origin;
+    Rectangle drawDestRec = destRec;
+
+    // Special handling for attack animations that are larger than idle
+    if (currentAnimation == "attack") {
+        // For the enemy specifically
+        if (owner->GetType() == "Enemy") {
+            // Calculate offsets to keep the enemy grounded and properly positioned
+            // This will align the bottom center of the attack animation with the
+            // bottom center of the idle animation
+
+
+            int idleWidth = 96;
+            int idleHeight = 64;
+
+            if (animations.find("idle") != animations.end()) {
+                idleWidth = animations["idle"].frameWidth;
+                idleHeight = animations["idle"].frameHeight;
+            }
+
+            // Center horizontally based on idle width
+            float xOffset = (anim.frameWidth - idleWidth) / 2.0f;
+
+            // Align bottom edges (keep feet on the ground)
+            float yOffset = (anim.frameHeight - idleHeight);
+
+            // Adjust the destination rectangle
+            drawDestRec.x = owner->GetPosition().x - xOffset;
+            drawDestRec.y = owner->GetPosition().y - yOffset;
+        }
+    }
 
     // Draw the sprite
     DrawTexturePro(
         anim.texture,
         sourceRec,
-        destRec,
-        origin,
+        drawDestRec,
+        drawOrigin,
         rotation,
         WHITE
     );
@@ -91,7 +122,7 @@ void SpriteComponent::SetTexture(const std::string& animationName, Texture2D tex
     info.texture = texture;
     info.frameCount = frameCount;
     info.frameWidth = frameWidth;
-    info.frameHeight = texture.height;
+    info.frameHeight = frameHeight;
     animations[animationName] = info;
 
     // If this is our first animation, set it as current
@@ -113,6 +144,10 @@ void SpriteComponent::SetAnimation(const std::string& animationName) {
         currentFrame = 0;
         frameTime = 0.0f;
         animationComplete = false;
+
+        const auto& anim = animations[currentAnimation];
+        width = anim.frameWidth;
+        height = anim.frameHeight;
     }
 }
 

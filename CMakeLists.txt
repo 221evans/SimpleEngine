@@ -39,15 +39,15 @@ add_executable(SimpleEngine main.cpp
         src/TextureHandler.hpp
         src/Game.cpp
         src/Game.hpp
-        src/Entity.cpp
-        src/Entity.hpp
-        src/Component.hpp
-        src/SpriteComponent.cpp
-        src/SpriteComponent.hpp
-        src/CombatComponent.cpp
-        src/CombatComponent.hpp
-        src/PlayerEntity.cpp
-        src/PlayerEntity.hpp
-        src/EnemyEntity.cpp
-        src/EnemyEntity.hpp)
+        src/Entity/Entity.cpp
+        src/Entity/Entity.hpp
+        src/Entity/Component.hpp
+        src/Entity/SpriteComponent.cpp
+        src/Entity/SpriteComponent.hpp
+        src/Entity/CombatComponent.cpp
+        src/Entity/CombatComponent.hpp
+        src/Entity/PlayerEntity.cpp
+        src/Entity/PlayerEntity.hpp
+        src/Entity/EnemyEntity.cpp
+        src/Entity/EnemyEntity.hpp)
 target_link_libraries(SimpleEngine PRIVATE raylib)
