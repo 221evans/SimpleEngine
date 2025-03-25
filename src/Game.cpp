@@ -1,7 +1,7 @@
 // src/Game.cpp
 #include "Game.hpp"
-#include "PlayerEntity.hpp"
-#include "EnemyEntity.hpp"
+#include "Entity/PlayerEntity.hpp"
+#include "Entity/EnemyEntity.hpp"
 #include "raylib.h"
 #include <iostream>
 
@@ -17,7 +17,9 @@ Game::~Game() {
 }
 
 void Game::Init() {
-    InitWindow(800, 600, "Turn Based RPG - Entity System");
+    InitWindow(800, 600, "Turn Based RPG");
+    // Load background Image
+    textureHandler.LoadBackgroundTexture();
 
     // Create player entity
     player = std::make_shared<PlayerEntity>();
@@ -31,23 +33,44 @@ void Game::Init() {
     for (auto& entity : entities) {
         entity->Init();
     }
-
     std::cout << "Game Initialized. Player's Turn First." << std::endl;
 }
 
-void Game::Update(float deltaTime) {
-    // Update all entities
-    for (auto& entity : entities) {
-        entity->Update(deltaTime);
-    }
+void Game::Draw()
+{
+    Rectangle sourceRec = {
+    0.0,0.0f,
+        (float)textureHandler.background.width,(float)textureHandler.background.height,
+    };
 
+    Rectangle destRec = {
+    0.0,0.0f,
+    (float)GetScreenWidth(),(float)GetScreenHeight(),
+
+    };
+
+    Vector2 origin = {0.0f,0.0f};
+
+    DrawTexturePro(textureHandler.background,sourceRec,destRec,origin,0.0f,WHITE);
+
+    // Draw UI
+    DrawUI();
 
     for (auto& entity : entities) {
         entity->Draw();
     }
+}
 
-    // Draw UI
-    DrawUI();
+
+
+void Game::Update(float deltaTime) {
+
+    Draw();
+
+    // Update all entities
+    for (auto& entity : entities) {
+        entity->Update(deltaTime);
+    }
 
     // Handle turn-based mechanics
     if (isPlayerTurn) {
@@ -109,17 +132,15 @@ void Game::SwitchToEnemyTurn() {
 }
 
 void Game::DrawUI() {
-    DrawRectangle(50, 350, 700, 100, BLACK);
-
     // Add a turn indicator
     std::string turnText = isPlayerTurn ? "PLAYER TURN" : "ENEMY TURN";
-    DrawText(turnText.c_str(), 350, 370, 20, YELLOW);
+    DrawText(turnText.c_str(), 300, 370, 20, DARKGRAY);
 
     // Draw action buttons
-    DrawText("1: ATTACK", 100, 480, 20, WHITE);
-    DrawText("2: DEFEND", 250, 480, 20, WHITE);
-    DrawText("3: ITEM", 400, 480, 20, WHITE);
-    DrawText("4: RUN", 550, 480, 20, WHITE);
+    DrawText("1: ATTACK", 100, 480, 20, BLACK);
+    DrawText("2: DEFEND", 250, 480, 20, BLACK);
+    DrawText("3: ITEM", 400, 480, 20, BLACK);
+    DrawText("4: RUN", 550, 480, 20, BLACK);
 }
 
 void Game::AddEntity(std::shared_ptr<Entity> entity) {

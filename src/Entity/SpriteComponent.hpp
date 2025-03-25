@@ -3,7 +3,7 @@
 #define SPRITE_COMPONENT_HPP
 
 #include "Component.hpp"
-#include "TextureHandler.hpp"
+#include "../TextureHandler.hpp"
 #include "raylib.h"
 #include <unordered_map>
 #include <string>

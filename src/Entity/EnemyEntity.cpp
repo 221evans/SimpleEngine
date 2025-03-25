@@ -12,7 +12,7 @@ EnemyEntity::EnemyEntity() :
     entityType = "Enemy";
 
     // Set initial position
-    position = {200.0f, 535.0f};
+    position = {400.0f, 535.0f};
 
     // Set collision rectangle
     collisionRec = {position.x, position.y, 96.0f, 64.0f};

@@ -6,7 +6,7 @@
 #define PLAYERENTITY_HPP
 
 #include "Entity.hpp"
-#include "TextureHandler.hpp"
+#include "../TextureHandler.hpp"
 
 class SpriteComponent;
 class CombatComponent;

@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 
+#include "TextureHandler.hpp"
+
 // Forward declarations
 class Entity;
 class PlayerEntity;
@@ -13,11 +15,13 @@ class EnemyEntity;
 
 class Game {
 public:
+    TextureHandler textureHandler;
     Game();
     ~Game();
 
     void Init();
     void Update(float deltaTime);
+    void Draw();
 
 private:
     // Entities

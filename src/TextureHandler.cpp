@@ -6,6 +6,11 @@
 #include <iostream>
 #include <filesystem>
 
+void TextureHandler::LoadBackgroundTexture()
+{
+    background = LoadTexture("assets/Background.png");
+}
+
 void TextureHandler::LoadPlayerTextures()
 {
     std::cout << "Loading textures from: " << std::filesystem::current_path().string() << std::endl;
@@ -28,6 +33,8 @@ void TextureHandler::LoadBlackBoarTextures()
     blackBoarDead = LoadTexture("Assets/Enemy/blackBoarDead.png");
 }
 
+
+
 void TextureHandler::UnloadTextures() const
 {
     // Unload player
@@ -41,4 +48,5 @@ void TextureHandler::UnloadTextures() const
     UnloadTexture(blackBoarRun);
     UnloadTexture(blackBoarAttack);
     UnloadTexture(blackBoarDead);
+    UnloadTexture(background);
 }

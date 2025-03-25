@@ -26,6 +26,10 @@ public:
     Texture2D whiteBoarAttack;
     Texture2D whiteBoarDead;
 
+    // Background Image
+    Texture2D background;
+
+    void LoadBackgroundTexture();
     void LoadPlayerTextures();
     void LoadBlackBoarTextures();
     void UnloadTextures() const;
