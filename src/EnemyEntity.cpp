@@ -33,10 +33,10 @@ void EnemyEntity::Init() {
     spriteComponent = std::make_shared<SpriteComponent>();
 
     // Set up animations
-    spriteComponent->SetTexture("idle", textureHandler.blackBoarIdle, 4, 96);
-    spriteComponent->SetTexture("run", textureHandler.blackBoarRun, 6, 96);
-    spriteComponent->SetTexture("attack", textureHandler.blackBoarAttack, 8, 96);
-    spriteComponent->SetTexture("dead", textureHandler.blackBoarDead, 4, 96);
+    spriteComponent->SetTexture("idle", textureHandler.blackBoarIdle, 4, 96, 64);
+    spriteComponent->SetTexture("run", textureHandler.blackBoarRun, 6, 96, 64);
+    spriteComponent->SetTexture("attack", textureHandler.blackBoarAttack, 8, 96, 64);
+    spriteComponent->SetTexture("dead", textureHandler.blackBoarDead, 4, 96, 64);
 
     // Initial animation
     spriteComponent->SetAnimation("idle");

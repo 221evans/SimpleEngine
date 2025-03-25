@@ -41,6 +41,11 @@ void Game::Update(float deltaTime) {
         entity->Update(deltaTime);
     }
 
+
+    for (auto& entity : entities) {
+        entity->Draw();
+    }
+
     // Draw UI
     DrawUI();
 

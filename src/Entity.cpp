@@ -42,8 +42,12 @@ void Entity::Draw()
 {
     for (auto& component : components)
     {
-        // Nothing to draw at the base entity level
-        // Components will handle rendering
+        std::cout << "Entity::Draw() called for " << entityType
+                << " with " << components.size() << " components" << std::endl;
+
+        // Draw a colored rectangle to represent the entity's position and size
+
+
         component->Draw(this);
 
     }

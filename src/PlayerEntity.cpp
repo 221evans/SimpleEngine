@@ -16,7 +16,7 @@ PlayerEntity::PlayerEntity() :
     entityType = "Player";
 
     // Set initial position
-    position = {100.0f, 500.0f};
+    position = {100.0f, 535.0f};
 
     // Set collision rectangle
     collisionRec = {position.x, position.y, 64.0f, 64.0f};
@@ -37,11 +37,11 @@ void PlayerEntity::Init()
     spriteComponent = std::make_shared<SpriteComponent>();
 
     // Setup animations
-    spriteComponent->SetTexture("idle", textureHandler.playerIdle, 4,64);
-    spriteComponent->SetTexture("run", textureHandler.playerRun, 8,80);
-    spriteComponent->SetTexture("jump", textureHandler.playerJump, 15,64);
-    spriteComponent->SetTexture("attack", textureHandler.playerAttack,8,96);
-    spriteComponent->SetTexture("dead", textureHandler.playerDead, 4,64);
+    spriteComponent->SetTexture("idle", textureHandler.playerIdle, 4,64, 64);
+    spriteComponent->SetTexture("run", textureHandler.playerRun, 8,80, 64);
+    spriteComponent->SetTexture("jump", textureHandler.playerJump, 15,64, 80);
+    spriteComponent->SetTexture("attack", textureHandler.playerAttack,8,96, 80);
+    spriteComponent->SetTexture("dead", textureHandler.playerDead, 4,64, 64);
 
     // Initial animation
     spriteComponent->SetAnimation("idle");
@@ -87,7 +87,7 @@ void PlayerEntity::Jump(float deltaTime) {
     velocity += gravity * deltaTime;
     position.y += velocity * deltaTime;
 
-    float groundY = 500.0f;
+    float groundY = 535.0f;
     if (position.y >= groundY) {
         position.y = groundY;
         velocity = 0;

@@ -35,12 +35,19 @@ endif()
 
 
 add_executable(SimpleEngine main.cpp
-        src/Player.cpp
-        src/Player.hpp
         src/TextureHandler.cpp
         src/TextureHandler.hpp
-        src/Enemy.cpp
-        src/Enemy.hpp
         src/Game.cpp
-        src/Game.hpp)
+        src/Game.hpp
+        src/Entity.cpp
+        src/Entity.hpp
+        src/Component.hpp
+        src/SpriteComponent.cpp
+        src/SpriteComponent.hpp
+        src/CombatComponent.cpp
+        src/CombatComponent.hpp
+        src/PlayerEntity.cpp
+        src/PlayerEntity.hpp
+        src/EnemyEntity.cpp
+        src/EnemyEntity.hpp)
 target_link_libraries(SimpleEngine PRIVATE raylib)

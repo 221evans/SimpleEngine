@@ -18,7 +18,7 @@ public:
     void Draw(Entity* owner) override;
 
     // Animation controls
-    void SetTexture(const std::string& animationName, Texture2D texture, int frameCount, int frameWidth);
+    void SetTexture(const std::string& animationName, Texture2D texture, int frameCount, int frameWidth, int frameHeight);
     void SetAnimation(const std::string& animationName);
     void FlipHorizontal(bool flip);
 
@@ -37,6 +37,7 @@ private:
         Texture2D texture;
         int frameCount;
         int frameWidth;
+        int frameHeight;
     };
 
     std::unordered_map<std::string, AnimationInfo> animations;

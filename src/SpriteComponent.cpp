@@ -86,17 +86,19 @@ void SpriteComponent::Draw(Entity* owner) {
     );
 }
 
-void SpriteComponent::SetTexture(const std::string& animationName, Texture2D texture, int frameCount, int frameWidth) {
+void SpriteComponent::SetTexture(const std::string& animationName, Texture2D texture, int frameCount, int frameWidth, int frameHeight) {
     AnimationInfo info;
     info.texture = texture;
     info.frameCount = frameCount;
     info.frameWidth = frameWidth;
-
+    info.frameHeight = texture.height;
     animations[animationName] = info;
 
     // If this is our first animation, set it as current
     if (currentAnimation.empty()) {
         SetAnimation(animationName);
+        width = frameWidth;
+        height = frameHeight;
     }
 }
 
