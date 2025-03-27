@@ -89,10 +89,6 @@ void PlayerEntity::Update(float deltaTime)
 
     }
 
-    // Update jump mechanics
-    Jump(deltaTime);
-
-
     // Update collision rec
     collisionRec.x = position.x;
     collisionRec.y = position.y;
@@ -105,33 +101,6 @@ void PlayerEntity::Update(float deltaTime)
 void PlayerEntity::Draw()
 {
     Entity::Draw();
-}
-
-void PlayerEntity::Jump(float deltaTime) {
-    float gravity = 500.0f;
-    velocity += gravity * deltaTime;
-    position.y += velocity * deltaTime;
-
-    float groundY = 535.0f;
-    if (position.y >= groundY) {
-        position.y = groundY;
-        velocity = 0;
-        isGrounded = true;
-        isJumping = false;
-    }
-    else {
-        isGrounded = false;
-    }
-
-    if (IsKeyPressed(KEY_SPACE) && isGrounded) {
-        velocity = -300.0f;
-        isGrounded = false;
-        isJumping = true;
-
-        // Change animation to jump
-        spriteComponent->SetAnimation("jump");
-    }
-
 }
 
 void PlayerEntity::TriggerAttack() {

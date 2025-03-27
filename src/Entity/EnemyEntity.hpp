@@ -23,9 +23,9 @@ public:
 
     // Enemy specific methods
     void EnemyAttack();
-    bool IsAttackComplete() const;
+    [[nodiscard]] bool IsAttackComplete() const;
     void ResetAttackState();
-    bool IsInCombat() const {return inCombat; }
+    [[nodiscard]] bool IsInCombat() const {return inCombat; }
     void SetInCombat(bool combat) {inCombat = combat; }
 private:
     // Enemy specific properties

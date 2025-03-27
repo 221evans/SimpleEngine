@@ -21,8 +21,7 @@ public:
     void Update(float deltaTime) override;
     void Draw() override;
 
-    //Player specific methods
-    void Jump(float deltaTime);
+    //Player specific meth
     void TriggerAttack();
     bool IsAttackComplete();
     void ResetAttackState();
