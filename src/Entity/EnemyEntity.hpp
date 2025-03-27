@@ -25,10 +25,20 @@ public:
     void EnemyAttack();
     bool IsAttackComplete() const;
     void ResetAttackState();
+    bool IsInCombat() const {return inCombat; }
+    void SetInCombat(bool combat) {inCombat = combat; }
 private:
     // Enemy specific properties
     float attackTimer;
     float attackDuration;
+    float moveSpeed;
+    float movementTimer;
+    float movementDuration;
+    float directionChangeTimer;
+    float directionChangeDuration;
+    int moveDirection;
+    bool inCombat;
+    void Wander(float deltaTime);
 
     // Reference to components for ease of access
     std::shared_ptr<SpriteComponent> spriteComponent;

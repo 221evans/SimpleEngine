@@ -13,6 +13,14 @@ class Entity;
 class PlayerEntity;
 class EnemyEntity;
 
+enum class GameState
+{
+    EXPLORATION,
+    COMBAT,
+    TRANSITION_TO_COMBAT,
+    TRANSITION_TO_EXPLORATION
+};
+
 class Game {
 public:
     TextureHandler textureHandler;
@@ -24,6 +32,10 @@ public:
     void Draw();
 
 private:
+    GameState currentState;
+    float stateTransitionTimer;
+    const float TRANSITION_DURATION = 0.5f;  // Half a second transition
+
     // Entities
     std::shared_ptr<PlayerEntity> player;
     std::shared_ptr<EnemyEntity> enemy;
@@ -36,6 +48,11 @@ private:
     bool enemyTurnInitialized;
 
     // Game methods
+    void HandleExplorationMode(float deltaTime);
+    void HandleCombatMode(float deltaTime);
+    void CheckCollisions();
+    void TransitionToCombat();
+    void TransitionToExploration();
     void HandlePlayerTurn();
     void HandleEnemyTurn();
     void SwitchToPlayerTurn();

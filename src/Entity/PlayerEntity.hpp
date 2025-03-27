@@ -26,12 +26,19 @@ public:
     void TriggerAttack();
     bool IsAttackComplete();
     void ResetAttackState();
+    void MoveLeft(float deltaTime);
+    void MoveRight(float deltaTime);
+    bool IsInCombat() const { return inCombat; }
+    void SetInCombat(bool combat) { inCombat = combat; }
 
 private:
     // Player specific properties
     float velocity;
     bool isJumping;
     bool isGrounded;
+    bool inCombat;
+    float moveSpeed;
+
 
     // Reference to components for easy access
     std::shared_ptr<SpriteComponent> spriteComponent;

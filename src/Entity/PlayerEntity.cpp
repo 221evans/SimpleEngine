@@ -10,6 +10,8 @@
 PlayerEntity::PlayerEntity() :
     velocity(0.0f),
     isJumping(false),
+    moveSpeed(200.0f),
+    inCombat(false),
     isGrounded(true) {
 
     // Set entity type
@@ -64,6 +66,29 @@ void PlayerEntity::Init()
 
 void PlayerEntity::Update(float deltaTime)
 {
+    if (!inCombat)
+    {
+        bool isMoving = false;
+
+        if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
+        {
+            MoveLeft(deltaTime);
+            isMoving = true;
+        }
+
+        if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
+        {
+            MoveRight(deltaTime);
+            isMoving = true;
+        }
+
+        if (!isMoving && !isJumping && spriteComponent)
+        {
+            spriteComponent->SetAnimation("idle");
+        }
+
+    }
+
     // Update jump mechanics
     Jump(deltaTime);
 
@@ -126,3 +151,28 @@ void PlayerEntity::ResetAttackState() {
     Entity::ResetActionState();
 }
 
+void PlayerEntity::MoveLeft(float deltaTime)
+{
+    if (inCombat) return;
+
+    position.x -= moveSpeed * deltaTime;
+
+    if (spriteComponent && !isJumping)
+    {
+        spriteComponent->SetAnimation("run");
+        spriteComponent->FlipHorizontal(true);
+    }
+}
+
+
+void PlayerEntity::MoveRight(float deltaTime)
+{
+    if (inCombat) return;
+    position.x += moveSpeed * deltaTime;
+
+    if (spriteComponent && !isJumping)
+    {
+        spriteComponent->SetAnimation("run");
+        spriteComponent->FlipHorizontal(false);
+    }
+}

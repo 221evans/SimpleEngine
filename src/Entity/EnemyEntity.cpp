@@ -6,6 +6,11 @@
 
 EnemyEntity::EnemyEntity() :
     attackTimer(0.0f),
+    moveSpeed(150.0f),
+    movementTimer(0.0f),
+    movementDuration(2.0f),
+    directionChangeTimer(0.0f),
+    directionChangeDuration(3.0f),
     attackDuration(1.0f) {
 
     // Set entity type
@@ -24,6 +29,44 @@ EnemyEntity::EnemyEntity() :
 EnemyEntity::~EnemyEntity() {
     // Components will be cleaned up by the Entity destructor
 }
+
+void EnemyEntity::Wander(float deltaTime)
+{
+    if (inCombat) return; // Don't wander in combat
+
+    // Update timers
+    directionChangeTimer += deltaTime;
+
+    // Change direction periodically
+    if (directionChangeTimer >= directionChangeDuration) {
+        directionChangeTimer = 0.0f;
+        // Random direction: -1 (left), 0 (idle), or 1 (right)
+        moveDirection = GetRandomValue(-1, 1);
+
+        // Set animation based on movement
+        if (moveDirection == 0 && spriteComponent) {
+            spriteComponent->SetAnimation("idle");
+        } else if (spriteComponent) {
+            spriteComponent->SetAnimation("run");
+            spriteComponent->FlipHorizontal(moveDirection < 0);
+        }
+    }
+
+    // Move in the current direction
+    if (moveDirection != 0) {
+        position.x += moveDirection * moveSpeed * deltaTime;
+
+        // Keep enemy within screen bounds (simple boundary check)
+        if (position.x < 50) {
+            position.x = 50;
+            moveDirection = 1; // Reverse direction if hitting left edge
+        } else if (position.x > 700) {
+            position.x = 700;
+            moveDirection = -1; // Reverse direction if hitting right edge
+        }
+    }
+}
+
 
 void EnemyEntity::Init() {
     // Create and initialize components
@@ -59,6 +102,13 @@ void EnemyEntity::Init() {
 }
 
 void EnemyEntity::Update(float deltaTime) {
+
+
+    if (!inCombat)
+    {
+        Wander(deltaTime);
+    }
+
     // Update collision rectangle
     collisionRec.x = position.x;
     collisionRec.y = position.y;
