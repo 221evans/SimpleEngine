@@ -42,14 +42,7 @@ void Entity::Draw()
 {
     for (auto& component : components)
     {
-        std::cout << "Entity::Draw() called for " << entityType
-                << " with " << components.size() << " components" << std::endl;
-
-        // Draw a colored rectangle to represent the entity's position and size
-
-
         component->Draw(this);
-
     }
 }
 

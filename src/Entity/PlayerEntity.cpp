@@ -132,10 +132,6 @@ void PlayerEntity::Jump(float deltaTime) {
         spriteComponent->SetAnimation("jump");
     }
 
-    // If we were jumping but are now on the ground, go back to idle
-    if (!isJumping && isGrounded && !combatComponent->IsAttacking()) {
-        spriteComponent->SetAnimation("idle");
-    }
 }
 
 void PlayerEntity::TriggerAttack() {

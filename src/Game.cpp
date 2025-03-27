@@ -5,6 +5,8 @@
 #include "raylib.h"
 #include <iostream>
 
+#include "Entity/SpriteComponent.hpp"
+
 Game::Game() :
     isPlayerTurn(true),
     isEnemyTurn(false),
@@ -62,8 +64,6 @@ void Game::Draw()
         entity->Draw();
     }
 }
-
-
 
 void Game::Update(float deltaTime) {
 
@@ -143,6 +143,13 @@ void Game::TransitionToCombat()
     player->SetPosition({100.0f, 535.0f});
     enemy->SetPosition({400.0f, 535.0f});
 
+    // Reset animation states
+    if (auto playerSprite = player->GetComponent<SpriteComponent>())
+        playerSprite->SetAnimation("idle");
+
+    if (auto enemySprite = enemy->GetComponent<SpriteComponent>())
+        enemySprite->SetAnimation("idle");
+
     std::cout << "Entering combat!" << std::endl;
 }
 
@@ -164,6 +171,12 @@ void Game::TransitionToExploration()
     // Move enemy away from player to avoid immediately triggering combat again
     Vector2 playerPos = player->GetPosition();
     enemy->SetPosition({playerPos.x + 200.0f, playerPos.y});
+
+    if (auto playerSprite = player->GetComponent<SpriteComponent>())
+        playerSprite->SetAnimation("idle");
+
+    if (auto enemySprite = enemy->GetComponent<SpriteComponent>())
+        enemySprite->SetAnimation("idle");
 
     std::cout << "Returning to exploration!" << std::endl;
 

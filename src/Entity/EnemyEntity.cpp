@@ -9,6 +9,7 @@ EnemyEntity::EnemyEntity() :
     moveSpeed(150.0f),
     movementTimer(0.0f),
     movementDuration(2.0f),
+    moveDirection(0.0f),
     directionChangeTimer(0.0f),
     directionChangeDuration(3.0f),
     attackDuration(1.0f) {
@@ -44,11 +45,18 @@ void EnemyEntity::Wander(float deltaTime)
         moveDirection = GetRandomValue(-1, 1);
 
         // Set animation based on movement
-        if (moveDirection == 0 && spriteComponent) {
-            spriteComponent->SetAnimation("idle");
-        } else if (spriteComponent) {
-            spriteComponent->SetAnimation("run");
-            spriteComponent->FlipHorizontal(moveDirection < 0);
+        if (spriteComponent) {
+            if (moveDirection == 0) {
+                spriteComponent->SetAnimation("idle");
+            } else {
+                spriteComponent->SetAnimation("run");
+
+                // If sprites start facing LEFT:
+                // - When moving left (negative direction), DON'T flip (false)
+                // - When moving right (positive direction), DO flip (true)
+                bool shouldFlip = (moveDirection > 0);
+                spriteComponent->FlipHorizontal(shouldFlip);
+            }
         }
     }
 
@@ -60,13 +68,24 @@ void EnemyEntity::Wander(float deltaTime)
         if (position.x < 50) {
             position.x = 50;
             moveDirection = 1; // Reverse direction if hitting left edge
+
+            if (spriteComponent) {
+                // When bouncing off left wall to go right, FLIP the sprite
+                spriteComponent->FlipHorizontal(true);
+                spriteComponent->SetAnimation("run");
+            }
         } else if (position.x > 700) {
             position.x = 700;
             moveDirection = -1; // Reverse direction if hitting right edge
+
+            if (spriteComponent) {
+                // When bouncing off right wall to go left, DON'T flip
+                spriteComponent->FlipHorizontal(false);
+                spriteComponent->SetAnimation("run");
+            }
         }
     }
 }
-
 
 void EnemyEntity::Init() {
     // Create and initialize components
@@ -77,7 +96,7 @@ void EnemyEntity::Init() {
 
     // Set up animations
     spriteComponent->SetTexture("idle", textureHandler.blackBoarIdle, 4, 96, 64);
-    spriteComponent->SetTexture("run", textureHandler.blackBoarRun, 6, 96, 64);
+    spriteComponent->SetTexture("run", textureHandler.blackBoarRun, 6, 80, 64);
     spriteComponent->SetTexture("attack", textureHandler.blackBoarAttack, 8, 160, 112);
     spriteComponent->SetTexture("dead", textureHandler.blackBoarDead, 4, 96, 64);
 
