@@ -69,6 +69,8 @@ void EnemyEntity::Wander(float deltaTime)
             position.x = 50;
             moveDirection = 1; // Reverse direction if hitting left edge
 
+
+
             if (spriteComponent) {
                 // When bouncing off left wall to go right, FLIP the sprite
                 spriteComponent->FlipHorizontal(true);
@@ -77,7 +79,7 @@ void EnemyEntity::Wander(float deltaTime)
         } else if (position.x > 700) {
             position.x = 700;
             moveDirection = -1; // Reverse direction if hitting right edge
-
+            spriteComponent->enemyIsFacingLeft = true;
             if (spriteComponent) {
                 // When bouncing off right wall to go left, DON'T flip
                 spriteComponent->FlipHorizontal(false);
@@ -85,6 +87,18 @@ void EnemyEntity::Wander(float deltaTime)
             }
         }
     }
+
+    if (moveDirection == -1)
+    {
+        spriteComponent->enemyIsFacingLeft = true;
+        std::cout << spriteComponent->enemyIsFacingLeft << " " <<"Enemy is facing left"<< std::endl;
+    } else if (moveDirection == 1)
+    {
+        spriteComponent->enemyIsFacingLeft = false;
+        std::cout << spriteComponent->enemyIsFacingLeft << " " << "Enemy is facing right"<< std::endl;
+    }
+
+
 }
 
 void EnemyEntity::Init() {

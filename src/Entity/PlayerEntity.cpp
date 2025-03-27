@@ -74,12 +74,16 @@ void PlayerEntity::Update(float deltaTime)
         {
             MoveLeft(deltaTime);
             isMoving = true;
+            spriteComponent->playerIsFacingLeft = true;
+
         }
 
         if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
         {
             MoveRight(deltaTime);
             isMoving = true;
+            spriteComponent->playerIsFacingLeft = false;
+
         }
 
         if (!isMoving && !isJumping && spriteComponent)

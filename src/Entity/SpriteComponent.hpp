@@ -26,6 +26,8 @@ public:
     int GetWidth() const { return width; }
     int GetHeight() const { return height; }
     bool IsAnimationComplete() const { return animationComplete; }
+    bool enemyIsFacingLeft = true;
+    bool playerIsFacingLeft = false;
 
     // Setters
     void SetSize(int w, int h) { width = w; height = h; }

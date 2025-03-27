@@ -145,10 +145,32 @@ void Game::TransitionToCombat()
 
     // Reset animation states
     if (auto playerSprite = player->GetComponent<SpriteComponent>())
+    {
         playerSprite->SetAnimation("idle");
 
+        if (playerSprite->playerIsFacingLeft == true)
+        {
+            playerSprite->FlipHorizontal(false);
+            std::cout <<"Flipping player" << std::endl;
+
+        }
+    }
+
+
+
+
     if (auto enemySprite = enemy->GetComponent<SpriteComponent>())
+    {
         enemySprite->SetAnimation("idle");
+        if (enemySprite->enemyIsFacingLeft == false)
+        {
+            enemySprite->FlipHorizontal(false);
+
+
+        }
+
+    }
+
 
     std::cout << "Entering combat!" << std::endl;
 }
