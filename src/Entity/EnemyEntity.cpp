@@ -33,6 +33,9 @@ EnemyEntity::~EnemyEntity() {
 
 void EnemyEntity::Wander(float deltaTime)
 {
+
+    if (inCombat || IsDead() || !spriteComponent) return;
+
     if (inCombat) return; // Don't wander in combat
 
     // Update timers
@@ -58,6 +61,8 @@ void EnemyEntity::Wander(float deltaTime)
                 spriteComponent->FlipHorizontal(shouldFlip);
             }
         }
+
+
     }
 
     // Move in the current direction
@@ -102,6 +107,7 @@ void EnemyEntity::Wander(float deltaTime)
 }
 
 void EnemyEntity::Init() {
+
     // Create and initialize components
     textureHandler.LoadBlackBoarTextures();
 
@@ -112,7 +118,7 @@ void EnemyEntity::Init() {
     spriteComponent->SetTexture("idle", textureHandler.blackBoarIdle, 4, 96, 64);
     spriteComponent->SetTexture("run", textureHandler.blackBoarRun, 6, 80, 64);
     spriteComponent->SetTexture("attack", textureHandler.blackBoarAttack, 8, 160, 112);
-    spriteComponent->SetTexture("dead", textureHandler.blackBoarDead, 4, 96, 64);
+    spriteComponent->SetTexture("dead", textureHandler.blackBoarDead, 8, 144, 96);
 
     // Initial animation
     spriteComponent->SetAnimation("idle");
@@ -131,7 +137,8 @@ void EnemyEntity::Init() {
     AddComponent(combatComponent);
 
     // Initialize all components
-    Entity::Init();
+
+        Entity::Init();
 }
 
 void EnemyEntity::Update(float deltaTime) {
@@ -142,19 +149,27 @@ void EnemyEntity::Update(float deltaTime) {
         Wander(deltaTime);
     }
 
+
     // Update collision rectangle
     collisionRec.x = position.x;
     collisionRec.y = position.y;
-    collisionRec.width = spriteComponent->GetWidth();
-    collisionRec.height = spriteComponent->GetHeight();
+
+    // Only update width/height if spriteComponent exists
+    if (spriteComponent) {
+        collisionRec.width = spriteComponent->GetWidth();
+        collisionRec.height = spriteComponent->GetHeight();
+    }
 
     // Update all components
     Entity::Update(deltaTime);
 }
 
 void EnemyEntity::Draw() {
-    // Draw is handled by the components
-    Entity::Draw();
+    if (!IsDead())
+    {
+        Entity::Draw();
+    }
+
 }
 
 void EnemyEntity::EnemyAttack() {

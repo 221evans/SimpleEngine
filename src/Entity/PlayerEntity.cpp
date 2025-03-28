@@ -25,6 +25,8 @@ PlayerEntity::PlayerEntity() :
 
     // Set initial health
     health = 100;
+
+    playerDamage = 100;
 }
 
 PlayerEntity::~PlayerEntity() {

@@ -58,6 +58,8 @@ private:
     void SwitchToPlayerTurn();
     void SwitchToEnemyTurn();
     void DrawUI();
+    void CheckEntityHealth();
+    void SpawnNewEnemy();
 
     // Entity management
     void AddEntity(std::shared_ptr<Entity> entity);

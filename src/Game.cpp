@@ -14,6 +14,7 @@ Game::Game() :
     enemyTurnInitialized(false),
     currentState(GameState::EXPLORATION),
     stateTransitionTimer(0.0f) {
+
 }
 
 Game::~Game() {
@@ -61,12 +62,14 @@ void Game::Draw()
     DrawUI();
 
     for (auto& entity : entities) {
-        entity->Draw();
+        if (entity)
+        {
+            entity->Draw();
+        }
     }
 }
 
 void Game::Update(float deltaTime) {
-
 
     if (currentState == GameState::TRANSITION_TO_COMBAT)
     {
@@ -115,6 +118,12 @@ void Game::HandleExplorationMode(float deltaTime)
         entity->Update(deltaTime);
     }
 
+    if (!enemy) {
+        SpawnNewEnemy();
+        enemy->SetHealth(100);
+        std::cout << "Is Enemy Dead? " << enemy->IsDead() << std::endl;
+    }
+
     CheckCollisions();
 }
 
@@ -134,6 +143,7 @@ void Game::TransitionToCombat()
 {
     currentState = GameState::TRANSITION_TO_COMBAT;
     stateTransitionTimer = 0.0f;
+    isPlayerTurn = true;
 
     // Update player and enemy states
     player->SetInCombat(true);
@@ -152,12 +162,8 @@ void Game::TransitionToCombat()
         {
             playerSprite->FlipHorizontal(false);
             std::cout <<"Flipping player" << std::endl;
-
         }
     }
-
-
-
 
     if (auto enemySprite = enemy->GetComponent<SpriteComponent>())
     {
@@ -165,10 +171,7 @@ void Game::TransitionToCombat()
         if (enemySprite->enemyIsFacingLeft == false)
         {
             enemySprite->FlipHorizontal(false);
-
-
         }
-
     }
 
 
@@ -180,52 +183,78 @@ void Game::TransitionToExploration()
     currentState = GameState::TRANSITION_TO_EXPLORATION;
     stateTransitionTimer = 0.0f;
 
-    // Update player and enemy states
-    player->SetInCombat(false);
-    enemy->SetInCombat(false);
-
-    // Reset combat state
+    // Reset combat state completely
     isPlayerTurn = true;
     isEnemyTurn = false;
     playerTurnInitialized = false;
     enemyTurnInitialized = false;
 
-    // Move enemy away from player to avoid immediately triggering combat again
-    Vector2 playerPos = player->GetPosition();
-    enemy->SetPosition({playerPos.x + 200.0f, playerPos.y});
+    // Checks if player still exists
+    if (player)
+    {
+        player->SetInCombat(false);
+        player->ResetAttackState();
 
-    if (auto playerSprite = player->GetComponent<SpriteComponent>())
-        playerSprite->SetAnimation("idle");
+        if (auto playerSprite = player->GetComponent<SpriteComponent>())
+            playerSprite->SetAnimation("idle");
+    }
 
-    if (auto enemySprite = enemy->GetComponent<SpriteComponent>())
-        enemySprite->SetAnimation("idle");
+    // Checks if enemy still exists
+    if (enemy)
+    {
+        // Move enemy away from player to avoid immediately triggering combat again
+        Vector2 playerPos = player->GetPosition();
+        enemy->SetPosition({playerPos.x + 200.0f, playerPos.y});
+
+        if (auto enemySprite = enemy->GetComponent<SpriteComponent>())
+            enemySprite->SetAnimation("idle");
+        enemy->SetInCombat(false);
+    }
+
+
 
     std::cout << "Returning to exploration!" << std::endl;
+
+
 
 }
 
 void Game::HandleCombatMode(float deltaTime) {
+    // Check for dead entities first
+    CheckEntityHealth();
+
+    // Exit if enemy is dead after health check
+    if (!enemy) return;
+
     // Update all entities
     for (auto& entity : entities) {
-        entity->Update(deltaTime);
+        if (entity) { // Add null check
+            entity->Update(deltaTime);
+        }
     }
 
-    // Handle turn-based mechanics
-    if (isPlayerTurn) {
-        HandlePlayerTurn();
-    }
-    else if (isEnemyTurn) {
-        HandleEnemyTurn();
+    // Handle turn-based mechanics (only if enemy exists)
+    if (enemy) {
+        if (isPlayerTurn) {
+            HandlePlayerTurn();
+        }
+        else if (isEnemyTurn) {
+            HandleEnemyTurn();
+        }
     }
 
     // Check if combat is over (can be enhanced later with victory/defeat conditions)
-    if (IsKeyPressed(KEY_ESCAPE)) {
+    if (IsKeyPressed(KEY_FOUR)) {
         TransitionToExploration();
+        std::cout << "You ran like a coward" << std::endl;
     }
 }
 
 
 void Game::HandlePlayerTurn() {
+
+    if (!player || !enemy) return;
+
     if (!playerTurnInitialized) {
         player->StartTurn();
         playerTurnInitialized = true;
@@ -239,11 +268,30 @@ void Game::HandlePlayerTurn() {
     // Check if player has completed their action
     if (player->IsAttackComplete()) {
         std::cout << "Player action complete. Switching to enemy turn." << std::endl;
+        enemy->SetHealth(enemy->GetHealth() - player->playerDamage);
+        std::cout << enemy->GetHealth() << std::endl;
+        std::cout << enemy->IsDead() << std::endl;
+
+        if (enemy->IsDead()) {
+            CheckEntityHealth();
+            isEnemyTurn = false;
+            isPlayerTurn = false;
+            return; // Exit early if enemy is dead
+        }
+
         SwitchToEnemyTurn();
+    }
+
+    if (enemy && enemy->IsDead()) {
+        CheckEntityHealth();
+        return;
     }
 }
 
 void Game::HandleEnemyTurn() {
+
+    if (!enemy || !player) return;
+
     if (!enemyTurnInitialized) {
         enemy->StartTurn();
         enemyTurnInitialized = true;
@@ -301,6 +349,48 @@ void Game::DrawUI() {
 
         Color transColor = {0, 0, 0, (unsigned char)(alpha * 180)};
         DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), transColor);
+    }
+}
+
+void Game::CheckEntityHealth()
+{
+    if (enemy && enemy->IsDead())
+    {
+        std::cout << "Enemy is dead" << std::endl;
+
+        //Reset turn flags
+        isPlayerTurn = true;
+        isEnemyTurn = false;
+        playerTurnInitialized = false;
+        enemyTurnInitialized = false;
+
+        // Remove enemy from entities list
+        auto it = std::find(entities.begin(), entities.end(), enemy);
+        if (it != entities.end()) {
+            entities.erase(it);
+        }
+
+        enemy = nullptr;
+
+        if (currentState == GameState::COMBAT) {
+            TransitionToExploration();
+        }
+    }
+}
+
+void Game::SpawnNewEnemy()
+{
+    if (!enemy)
+    {
+        enemy = std::make_shared<EnemyEntity>();
+        enemy->Init();
+
+        Vector2 playerPos = player->GetPosition();
+        enemy->SetPosition({playerPos.x + 300.0f, playerPos.y});
+
+        AddEntity(enemy);
+        std::cout << "New enemy spawned!" << std::endl;
+
     }
 }
 

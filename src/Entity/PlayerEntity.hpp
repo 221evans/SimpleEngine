@@ -5,6 +5,7 @@
 #ifndef PLAYERENTITY_HPP
 #define PLAYERENTITY_HPP
 
+#include "EnemyEntity.hpp"
 #include "Entity.hpp"
 #include "../TextureHandler.hpp"
 
@@ -16,6 +17,7 @@ class PlayerEntity : public Entity {
 public:
     PlayerEntity();
     ~PlayerEntity() override;
+    EnemyEntity enemyEntity;
 
     void Init() override;
     void Update(float deltaTime) override;
@@ -29,7 +31,7 @@ public:
     void MoveRight(float deltaTime);
     bool IsInCombat() const { return inCombat; }
     void SetInCombat(bool combat) { inCombat = combat; }
-
+    int playerDamage;
 private:
     // Player specific properties
     float velocity;
@@ -37,6 +39,7 @@ private:
     bool isGrounded;
     bool inCombat;
     float moveSpeed;
+
 
 
     // Reference to components for easy access
